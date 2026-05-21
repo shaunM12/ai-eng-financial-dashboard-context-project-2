@@ -1,11 +1,12 @@
-# Rule: Debug/Reload Modes
-
-## Scope
-Backend Dockerfile, Uvicorn/debugpy startup configuration.
-
-## Standard
-- Never run `debugpy` or `--reload` in production Docker images.
-- Use build args or environment variables to toggle debug features.
-
-## Rationale
-Debug and reload modes are for development only. They reduce performance and expose internals if left enabled in production.
+---
+title: Debug and Reload Modes
+scope: project
+globs:
+	- 'backend/Dockerfile'
+	- 'backend/app/**/*.py'
+content:
+	- Do not run debugpy in production images or startup commands.
+	- Do not use the reload flag in production.
+	- Toggle debug features with environment variables or build arguments.
+	- Keep debug tooling limited to development to avoid performance and security risk.
+---

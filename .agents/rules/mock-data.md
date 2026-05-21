@@ -1,12 +1,12 @@
-# Rule: Mock Data Usage
-
-## Scope
-Backend data generation, API endpoints, and test fixtures.
-
-## Standard
-- Mock data must only be used in development or test environments.
-- Production must use a real database or API.
-- Clearly separate mock and real data logic.
-
-## Rationale
-Mock data is useful for demos and tests but is not suitable for real users or analytics. Separation prevents accidental exposure of fake data.
+---
+title: Mock Data Usage
+scope: project
+globs:
+	- 'backend/app/**/*.py'
+	- 'backend/tests/**/*.py'
+content:
+	- Use mock data only in development and test environments.
+	- Production paths must use real data sources.
+	- Keep mock and real data logic clearly separated.
+	- Prevent accidental exposure of fake data to users.
+---

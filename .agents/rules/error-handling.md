@@ -1,10 +1,13 @@
-# Rule: Error Handling
-
-## Scope
-Frontend error handling and logging.
-
-## Standard
-- Always log caught errors with diagnostic context, even if user-facing messages are generic.
-
-## Rationale
-Logging errors helps with debugging and monitoring, while user messages should remain clear and non-technical.
+---
+title: Error Handling
+scope: project
+globs:
+	- 'frontend/src/**/*.ts'
+	- 'frontend/src/**/*.tsx'
+	- 'backend/app/**/*.py'
+content:
+	- Log caught errors with enough diagnostic context for debugging.
+	- Keep user-facing error messages clear and non-technical.
+	- Cover both frontend and backend error paths.
+	- Improve observability without leaking sensitive details.
+---

@@ -1,10 +1,11 @@
-# Rule: Mock vs. Real Data Structure
-
-## Scope
-Backend data modules and organization.
-
-## Standard
-- Place all mock data and generators in a clearly named module or folder (e.g., `mock_data/`).
-
-## Rationale
-Clear separation of mock and real data prevents confusion and accidental exposure of test data in production.
+---
+title: Mock Versus Real Data Structure
+scope: project
+globs:
+	- 'backend/app/**/*.py'
+content:
+	- Keep mock data and generators in clearly named modules or folders.
+	- Keep production data access paths separate from mock implementations.
+	- Make environment switching explicit and easy to audit.
+	- Reduce confusion and accidental use of test data in production.
+---

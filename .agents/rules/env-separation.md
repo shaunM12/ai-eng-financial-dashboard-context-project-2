@@ -1,10 +1,13 @@
-# Rule: Environment Separation
-
-## Scope
-Environment variable and configuration management.
-
-## Standard
-- Use `.env`, `.env.development`, `.env.production` to separate config for different environments.
-
-## Rationale
-Environment-specific configs prevent accidental use of dev settings in production and vice versa.
+---
+title: Environment Separation
+scope: project
+globs:
+	- 'frontend/.env*'
+	- 'backend/.env*'
+	- 'docker-compose.yml'
+content:
+	- Separate settings by environment using env files.
+	- Keep development and production values isolated.
+	- Avoid deploying development configuration to production.
+	- Prefer environment-aware configuration over hardcoded values.
+---

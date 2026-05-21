@@ -1,11 +1,12 @@
-# Rule: Proxy Target Configuration
-
-## Scope
-Frontend Vite proxy settings.
-
-## Standard
-- Make Vite proxy target configurable via `.env` file.
-- Default to `backend` for Docker and `localhost` for local dev.
-
-## Rationale
-Hardcoded proxy targets break local development and deployment flexibility. Environment-based config is more robust.
+---
+title: Proxy Target Configuration
+scope: project
+globs:
+	- 'frontend/vite.config.ts'
+	- 'frontend/.env*'
+content:
+	- Make proxy target configurable through environment variables.
+	- Use sensible defaults for containerized and local development.
+	- Avoid hardcoded backend origins in frontend config.
+	- Preserve deployment flexibility across environments.
+---
