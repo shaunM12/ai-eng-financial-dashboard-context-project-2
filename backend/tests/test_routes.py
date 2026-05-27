@@ -1,4 +1,5 @@
 from datetime import date
+import re
 
 from fastapi.testclient import TestClient
 
@@ -128,6 +129,20 @@ def test_metrics_summary_by_month_returns_balances():
     assert set(first.keys()) == {"period", "income", "outcome", "net"}
     assert all(item["income"] >= 0 for item in payload)
     assert all(item["outcome"] >= 0 for item in payload)
+
+
+def test_metrics_summary_by_month_periods_are_canonical_and_sorted():
+    response = client.get("/api/metrics/summary", params={"group_by": "month"})
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload
+
+    periods = [item["period"] for item in payload]
+
+    # Enforce canonical YYYY-MM keys so lexicographic sort is chronological.
+    assert all(re.fullmatch(r"\d{4}-\d{2}", period) for period in periods)
+    assert periods == sorted(periods)
 
 
 def test_metrics_summary_by_week_honors_business_type_filter():
