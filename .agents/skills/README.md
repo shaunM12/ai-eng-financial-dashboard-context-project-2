@@ -5,6 +5,7 @@ This directory contains local agent skills for this repository.
 ## Available skills
 
 - `accessibility` — WCAG-focused review and remediation workflow for the dashboard frontend.
+- `vercel-react-best-practices` — Vercel React/Next.js performance and optimization guidance.
 
 ## Source
 

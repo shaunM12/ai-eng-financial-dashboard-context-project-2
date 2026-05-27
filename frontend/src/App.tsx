@@ -30,6 +30,19 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 type ViewMode = "home" | "comparison";
 
+const PAGE_METADATA: Record<ViewMode, { title: string; description: string }> = {
+  home: {
+    title: "Financial Overview Dashboard",
+    description:
+      "Track KPIs, income versus outcome trends, profit margin, and anomaly alerts in the financial dashboard.",
+  },
+  comparison: {
+    title: "B2B vs B2C Comparison Dashboard",
+    description:
+      "Compare top income categories and total income across B2B and B2C segments with date filtering.",
+  },
+};
+
 function buildQuery(
   params: Record<string, string | number | undefined>,
 ): string {
@@ -125,6 +138,19 @@ function App() {
     ],
     [b2bTotalIncome, b2cTotalIncome],
   );
+
+  useEffect(() => {
+    const { title, description } = PAGE_METADATA[view];
+    document.title = title;
+
+    let descriptionTag = document.querySelector('meta[name="description"]');
+    if (!descriptionTag) {
+      descriptionTag = document.createElement("meta");
+      descriptionTag.setAttribute("name", "description");
+      document.head.appendChild(descriptionTag);
+    }
+    descriptionTag.setAttribute("content", description);
+  }, [view]);
 
   useEffect(() => {
     fetchJson<FacetsResponse>("/api/metrics/facets")
@@ -375,45 +401,47 @@ function App() {
                   </label>
                 </CardContent>
                 <CardContent className="pt-0">
-                  {alertsError ? (
-                    <div
-                      role="alert"
-                      className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive-foreground"
-                    >
-                      {alertsError}
-                    </div>
-                  ) : alertsLoading ? (
-                    <div role="status" aria-live="polite" className="text-sm text-muted-foreground">
-                      Loading alerts...
-                    </div>
-                  ) : alerts.length === 0 ? (
-                    <div role="status" aria-live="polite" className="rounded-md border border-border bg-secondary/30 p-3 text-sm text-muted-foreground">
-                      No anomalies detected for the selected threshold and date range.
-                    </div>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-sm">
-                        <thead>
-                          <tr className="border-b border-border text-muted-foreground">
-                            <th className="px-3 py-2 font-medium">Period</th>
-                            <th className="px-3 py-2 font-medium">Recorded outcome</th>
-                            <th className="px-3 py-2 font-medium">Rolling avg (prev 3)</th>
-                            <th className="px-3 py-2 font-medium">Increase %</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {alerts.map((alert) => (
-                            <tr key={`${alert.period}-${alert.outcome_total}`} className="border-b border-border/60">
-                              <td className="px-3 py-2">{alert.period}</td>
-                              <td className="px-3 py-2">${alert.outcome_total.toFixed(2)}</td>
-                              <td className="px-3 py-2">${alert.baseline_average.toFixed(2)}</td>
-                              <td className="px-3 py-2">{(alert.increase_ratio * 100).toFixed(2)}%</td>
+                  <div className="min-h-[180px]">
+                    {alertsError ? (
+                      <div
+                        role="alert"
+                        className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive-foreground"
+                      >
+                        {alertsError}
+                      </div>
+                    ) : alertsLoading ? (
+                      <div role="status" aria-live="polite" className="flex h-full items-center text-sm text-muted-foreground">
+                        Loading alerts...
+                      </div>
+                    ) : alerts.length === 0 ? (
+                      <div role="status" aria-live="polite" className="rounded-md border border-border bg-secondary/30 p-3 text-sm text-muted-foreground">
+                        No anomalies detected for the selected threshold and date range.
+                      </div>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-sm">
+                          <thead>
+                            <tr className="border-b border-border text-muted-foreground">
+                              <th className="px-3 py-2 font-medium">Period</th>
+                              <th className="px-3 py-2 font-medium">Recorded outcome</th>
+                              <th className="px-3 py-2 font-medium">Rolling avg (prev 3)</th>
+                              <th className="px-3 py-2 font-medium">Increase %</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
+                          </thead>
+                          <tbody>
+                            {alerts.map((alert) => (
+                              <tr key={`${alert.period}-${alert.outcome_total}`} className="border-b border-border/60">
+                                <td className="px-3 py-2">{alert.period}</td>
+                                <td className="px-3 py-2">${alert.outcome_total.toFixed(2)}</td>
+                                <td className="px-3 py-2">${alert.baseline_average.toFixed(2)}</td>
+                                <td className="px-3 py-2">{(alert.increase_ratio * 100).toFixed(2)}%</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </>
@@ -491,7 +519,7 @@ function App() {
                   </CardHeader>
                   <CardContent>
                     {comparisonLoading ? (
-                      <p role="status" aria-live="polite" className="text-sm text-muted-foreground">
+                      <p role="status" aria-live="polite" className="flex min-h-[220px] items-center text-sm text-muted-foreground">
                         Loading B2B data...
                       </p>
                     ) : (
@@ -527,7 +555,7 @@ function App() {
                   </CardHeader>
                   <CardContent>
                     {comparisonLoading ? (
-                      <p role="status" aria-live="polite" className="text-sm text-muted-foreground">
+                      <p role="status" aria-live="polite" className="flex min-h-[220px] items-center text-sm text-muted-foreground">
                         Loading B2C data...
                       </p>
                     ) : (
@@ -567,7 +595,7 @@ function App() {
                 </CardHeader>
                 <CardContent>
                   {comparisonLoading ? (
-                    <div role="status" aria-live="polite" className="text-sm text-muted-foreground">
+                    <div role="status" aria-live="polite" className="flex h-[300px] items-center text-sm text-muted-foreground">
                       Loading comparison chart...
                     </div>
                   ) : (
