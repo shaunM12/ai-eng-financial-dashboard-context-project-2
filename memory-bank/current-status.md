@@ -21,6 +21,7 @@
   - Docker Compose for orchestrating frontend and backend
   - Service healthchecks
   - .agents/rules for project standards and automation
+  - .agents/skills/accessibility for WCAG-focused frontend review workflow
   - memory-bank for documentation and knowledge
 
 ## Known Gaps

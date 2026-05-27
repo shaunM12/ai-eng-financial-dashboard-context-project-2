@@ -244,6 +244,7 @@ function App() {
           <section className="flex flex-wrap items-center gap-2" aria-label="Dashboard views">
             <button
               type="button"
+              aria-pressed={view === "home"}
               className={`rounded-md border px-4 py-2 text-sm font-medium transition ${
                 view === "home"
                   ? "border-primary bg-primary/15 text-primary"
@@ -255,6 +256,7 @@ function App() {
             </button>
             <button
               type="button"
+              aria-pressed={view === "comparison"}
               className={`rounded-md border px-4 py-2 text-sm font-medium transition ${
                 view === "comparison"
                   ? "border-primary bg-primary/15 text-primary"
@@ -324,7 +326,10 @@ function App() {
               </Card>
 
               {homeError ? (
-                <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
+                <div
+                  role="alert"
+                  className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground"
+                >
                   {homeError}
                 </div>
               ) : null}
@@ -371,13 +376,18 @@ function App() {
                 </CardContent>
                 <CardContent className="pt-0">
                   {alertsError ? (
-                    <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive-foreground">
+                    <div
+                      role="alert"
+                      className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive-foreground"
+                    >
                       {alertsError}
                     </div>
                   ) : alertsLoading ? (
-                    <div className="text-sm text-muted-foreground">Loading alerts...</div>
+                    <div role="status" aria-live="polite" className="text-sm text-muted-foreground">
+                      Loading alerts...
+                    </div>
                   ) : alerts.length === 0 ? (
-                    <div className="rounded-md border border-border bg-secondary/30 p-3 text-sm text-muted-foreground">
+                    <div role="status" aria-live="polite" className="rounded-md border border-border bg-secondary/30 p-3 text-sm text-muted-foreground">
                       No anomalies detected for the selected threshold and date range.
                     </div>
                   ) : (
@@ -466,7 +476,10 @@ function App() {
               </Card>
 
               {comparisonError ? (
-                <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
+                <div
+                  role="alert"
+                  className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground"
+                >
                   {comparisonError}
                 </div>
               ) : null}
@@ -478,7 +491,9 @@ function App() {
                   </CardHeader>
                   <CardContent>
                     {comparisonLoading ? (
-                      <p className="text-sm text-muted-foreground">Loading B2B data...</p>
+                      <p role="status" aria-live="polite" className="text-sm text-muted-foreground">
+                        Loading B2B data...
+                      </p>
                     ) : (
                       <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm">
@@ -512,7 +527,9 @@ function App() {
                   </CardHeader>
                   <CardContent>
                     {comparisonLoading ? (
-                      <p className="text-sm text-muted-foreground">Loading B2C data...</p>
+                      <p role="status" aria-live="polite" className="text-sm text-muted-foreground">
+                        Loading B2C data...
+                      </p>
                     ) : (
                       <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm">
@@ -550,7 +567,9 @@ function App() {
                 </CardHeader>
                 <CardContent>
                   {comparisonLoading ? (
-                    <div className="text-sm text-muted-foreground">Loading comparison chart...</div>
+                    <div role="status" aria-live="polite" className="text-sm text-muted-foreground">
+                      Loading comparison chart...
+                    </div>
                   ) : (
                     <ResponsiveContainer width="100%" height={300}>
                       <BarChart data={comparisonChartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
@@ -558,7 +577,7 @@ function App() {
                         <XAxis dataKey="group" axisLine={false} tickLine={false} />
                         <YAxis axisLine={false} tickLine={false} tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`} />
                         <Tooltip
-                          formatter={(value: number) => `$${value.toFixed(2)}`}
+                          formatter={(value) => `$${Number(value ?? 0).toFixed(2)}`}
                           contentStyle={{
                             borderColor: "var(--color-border)",
                             backgroundColor: "var(--color-card)",
